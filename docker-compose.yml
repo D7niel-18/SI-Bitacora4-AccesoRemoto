@@ -1,0 +1,36 @@
+# SI_BITACORA IV
+# CONFIGURACION DE SERVICIOS REMOTOS Y ACCESO GRAFICO
+version: '3.8'
+
+services:
+  # SERVICIO SSH PARA ACCESO REMOTO POR TERMINAL
+
+  servidor_ssh:
+    image: linuxserver/openssh-server:latest
+    container_name: lab_ssh_servidor
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Madrid
+      - USER_NAME=danieljim
+      - USER_PASSWORD=daw1234
+      - USER_ACCESS=true
+      - PASSWORD_ACCESS=true
+    ports:
+      - "2222:2222" # Puerto utilizado para conexiones SSH
+
+    restart: unless-stopped
+
+  # SERVIDOR CON ESCRITORIO GRAFICO ACCESIBLE REMOTAMENTE
+  servidor_rdp:
+    image: linuxserver/webtop:ubuntu-xfce
+    container_name: lab_rdp_servidor
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Madrid
+    ports:
+      - "3389:3389" # Puerto usado para conexiones RDP
+      - "3000:3000" # Puerto para acceso web al entorno grafico
+    shm_size: "1gb"
+    restart: unless-stopped
